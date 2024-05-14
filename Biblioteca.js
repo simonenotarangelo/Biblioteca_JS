@@ -1,7 +1,5 @@
 const prompt=require('prompt-sync')();
 
-//cercare un metodo per salvare i cambiamenti (es. se un utente prende in prestito un libro, anche se chiudiamo il programma, questo prestito deve rimanere registrato).
-
 let Novecento = {
 
     titolo: "Novecento",
@@ -58,14 +56,38 @@ function aggiornamentiLibro()
 
 function visualizzaLibri()
 {
-    //switch case visualizzazione totale, per nome ecc...
     console.log("Ecco la lista dei libri presenti nella Biblioteca");
-
-    console.log(Novecento + "\n" + Lezioni + "\n" +Solaria + "\n" + Isola + "\n" + Arcipelago + "\n" + Inferno);
+    console.log(Novecento.titolo + "\n" + Lezioni.titolo + "\n" +Solaria.titolo + "\n" + Isola.titolo + "\n" + Arcipelago.titolo + "\n" + Inferno.titolo);
     
+    console.log("Vuoi visualizzare piu informazioni di questi libri ?");
+    sceltaVisualizzazione=prompt("si o no?");
+
+    if(sceltaVisualizzazione == "si")
+    {
+    VisualizzazioneLibro=prompt("Di quale libro? ");
+    switch(VisualizzazioneLibro)
+    {
+    case"Novecento":console.log("Ecco informazioni piu specifiche riguardanti il libro Novecento: ");
+                    console.log(Novecento);break;
+    case"Lezioni":console.log("Ecco informazioni piu specifiche riguardanti il libro Lezioni: ");
+                    console.log(Lezioni);break;
+    case"Solaria":console.log("Ecco informazioni piu specifiche riguardanti il libro Solaria: ");
+                    console.log(Solaria);break;
+    case"Isola":console.log("Ecco informazioni piu specifiche riguardanti il libro Isola: ");
+                    console.log(Isola);break;
+    case"Arcipelago":console.log("Ecco informazioni piu specifiche riguardanti il libro Arcipelago: ");
+                    console.log(Arcipelago);break;
+    case"Inferno":console.log("Ecco informazioni piu specifiche riguardanti il libro Inferno: ");
+                    console.log(Inferno);break;
+    }
+    }
+    else 
+    {
+        
+    }
 }
 
-function main()
+/*function main()
 {
     let scelta;
 
@@ -88,5 +110,7 @@ function main()
 
     }while(scelta!=0);
 }
+*/
+visualizzaLibri();
 
-main();
+//main();
