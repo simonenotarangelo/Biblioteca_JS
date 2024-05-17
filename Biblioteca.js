@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { main } = require('./Biblioteca');
+
 
 let Novecento = {
     titolo: "Novecento",
