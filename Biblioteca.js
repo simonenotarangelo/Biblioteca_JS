@@ -1,6 +1,10 @@
 const prompt = require('prompt-sync')();
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
 
-class Libro {
+class Libro 
+{
   constructor(titolo, autore, genere, isbn) {
     this.titolo = titolo;
     this.autore = autore;
@@ -8,30 +12,52 @@ class Libro {
     this.isbn = isbn;
   }
 
-  toString() {
+  toString() 
+  {
     return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
   }
 }
 
-class Libreria {
-  constructor() {
+class Libreria 
+{
+  constructor() 
+  {
     this.libri = [];
-
+    this.filePath = path.join(__dirname, 'libreria.txt');
+    this.caricaLibri();
   }
 
-  caricaLibri() {
-    const libriPredefiniti = [
-      new Libro('Il Nome della Rosa', 'Umberto Eco', 'Mistero', '978-88-452-1972-4'),
-      new Libro('1984', 'George Orwell', 'Distopia', '978-0-452-28423-4')
-    ];
-    this.libri = libriPredefiniti;
+  caricaLibri() 
+  {
+    if (fs.existsSync(this.filePath)) {
+      const data = fs.readFileSync(this.filePath, 'utf8').trim();
+      if (data !== '') {
+        const lines = data.split('\n');
+        lines.forEach(line => {
+          const [titolo, autore, genere, isbn] = line.split(', ');
+          const libro = new Libro(titolo, autore, genere, isbn);
+          this.libri.push(libro);
+        });
+      }
+    } else {
+      const dir = path.join(os.homedir(), 'books');
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+    }
+  }
+  
+
+  salvaLibri() 
+  {
+    const lines = this.libri.map(libro => libro.toString());
+    const data = lines.join('\n');
+    fs.writeFileSync(this.filePath, data, 'utf8');
+    console.log(`Libri salvati in ${this.filePath}`);
   }
 
-  salvaLibri() {
-    console.log("I libri sono salvati nel vettore in memoria.");
-  }
-
-  aggiungiLibro() {
+  aggiungiLibro() 
+  {
     const titolo = prompt('Inserisci il titolo del libro: ');
     const autore = prompt('Inserisci l\'autore del libro: ');
     const genere = prompt('Inserisci il genere del libro: ');
@@ -48,17 +74,15 @@ class Libreria {
     console.log("Libro aggiunto con successo.");
   }
 
-  visualizzaLibri() {
-    if (this.libri.length === 0) {
-      console.log("Non ci sono libri nella libreria.");
-    } else {
-      this.libri.forEach(libro => {
-        console.log(libro.toString());
-      });
-    }
+  visualizzaLibri() 
+  {
+    this.libri.forEach(libro => {
+      console.log(libro.toString());
+    });
   }
 
-  aggiornaLibro() {
+  aggiornaLibro() 
+  {
     const isbn = prompt('Inserisci l\'ISBN del libro da aggiornare: ');
     const nuovoTitolo = prompt('Inserisci il nuovo titolo del libro: ');
     const nuovoAutore = prompt('Inserisci il nuovo autore del libro: ');
@@ -76,9 +100,12 @@ class Libreria {
     }
   }
 
-  menu() {
+  // Funzione per gestire il menu
+  menu() 
+  {
     let scelta;
-    do {
+    do 
+    {
       console.log("\nMenu:");
       console.log("1. Aggiungi libro");
       console.log("2. Visualizza libri");
@@ -102,7 +129,7 @@ class Libreria {
         default:
           console.log("Scelta non valida. Riprova.");
       }
-    } while (scelta !== '0');
+    }while (scelta !== '0');
   }
 }
 
