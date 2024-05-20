@@ -1,10 +1,9 @@
-const prompt = require('prompt-sync')();
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const prompt = require('prompt-sync')();
 
-class Libro 
-{
+class Libro {
   constructor(titolo, autore, genere, isbn) {
     this.titolo = titolo;
     this.autore = autore;
@@ -12,33 +11,28 @@ class Libro
     this.isbn = isbn;
   }
 
-  toString() 
-  {
-    return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
+  // Metodo per ottenere il contenuto del libro come stringa
+  toString() {
+    return `this.titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
   }
 }
 
-class Libreria 
-{
-  constructor() 
-  {
+class Libreria {
+  constructor() {
     this.libri = [];
-    this.filePath = path.join(__dirname, 'libreria.txt');
+    this.filePath = path.join(os.homedir(), 'books', 'libreria.txt');
     this.caricaLibri();
   }
 
-  caricaLibri() 
-  {
+  caricaLibri() {
     if (fs.existsSync(this.filePath)) {
-      const data = fs.readFileSync(this.filePath, 'utf8').trim();
-      if (data !== '') {
-        const lines = data.split('\n');
-        lines.forEach(line => {
-          const [titolo, autore, genere, isbn] = line.split(', ');
-          const libro = new Libro(titolo, autore, genere, isbn);
-          this.libri.push(libro);
-        });
-      }
+      const data = fs.readFileSync(this.filePath, 'utf8');
+      const lines = data.split('\n');
+      lines.forEach(line => {
+        const [titolo, autore, genere, isbn] = line.split(', ');
+        const libro = new Libro(titolo, autore, genere, isbn);
+        this.libri.push(libro);
+      });
     } else {
       const dir = path.join(os.homedir(), 'books');
       if (!fs.existsSync(dir)) {
@@ -46,18 +40,15 @@ class Libreria
       }
     }
   }
-  
 
-  salvaLibri() 
-  {
+  salvaLibri() {
     const lines = this.libri.map(libro => libro.toString());
     const data = lines.join('\n');
     fs.writeFileSync(this.filePath, data, 'utf8');
     console.log(`Libri salvati in ${this.filePath}`);
   }
 
-  aggiungiLibro() 
-  {
+  aggiungiLibro() {
     const titolo = prompt('Inserisci il titolo del libro: ');
     const autore = prompt('Inserisci l\'autore del libro: ');
     const genere = prompt('Inserisci il genere del libro: ');
@@ -74,15 +65,13 @@ class Libreria
     console.log("Libro aggiunto con successo.");
   }
 
-  visualizzaLibri() 
-  {
+  visualizzaLibri() {
     this.libri.forEach(libro => {
       console.log(libro.toString());
     });
   }
 
-  aggiornaLibro() 
-  {
+  aggiornaLibro() {
     const isbn = prompt('Inserisci l\'ISBN del libro da aggiornare: ');
     const nuovoTitolo = prompt('Inserisci il nuovo titolo del libro: ');
     const nuovoAutore = prompt('Inserisci il nuovo autore del libro: ');
@@ -101,11 +90,9 @@ class Libreria
   }
 
   // Funzione per gestire il menu
-  menu() 
-  {
+  menu() {
     let scelta;
-    do 
-    {
+    do {
       console.log("\nMenu:");
       console.log("1. Aggiungi libro");
       console.log("2. Visualizza libri");
@@ -129,7 +116,7 @@ class Libreria
         default:
           console.log("Scelta non valida. Riprova.");
       }
-    }while (scelta !== '0');
+    } while (scelta !== '0');
   }
 }
 
