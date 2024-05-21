@@ -13,7 +13,7 @@ class Libro {
 
   // Metodo per ottenere il contenuto del libro come stringa
   toString() {
-    return `this.titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
+    return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
   }
 }
 
@@ -26,13 +26,15 @@ class Libreria {
 
   caricaLibri() {
     if (fs.existsSync(this.filePath)) {
-      const data = fs.readFileSync(this.filePath, 'utf8');
-      const lines = data.split('\n');
-      lines.forEach(line => {
-        const [titolo, autore, genere, isbn] = line.split(', ');
-        const libro = new Libro(titolo, autore, genere, isbn);
-        this.libri.push(libro);
-      });
+      const data = fs.readFileSync(this.filePath, 'utf8').trim();
+      if (data !== '') {
+        const lines = data.split('\n');
+        lines.forEach(line => {
+          const [titolo, autore, genere, isbn] = line.split(', ');
+          const libro = new Libro(titolo, autore, genere, isbn);
+          this.libri.push(libro);
+        });
+      }
     } else {
       const dir = path.join(os.homedir(), 'books');
       if (!fs.existsSync(dir)) {
@@ -40,6 +42,7 @@ class Libreria {
       }
     }
   }
+  
 
   salvaLibri() {
     const lines = this.libri.map(libro => libro.toString());
