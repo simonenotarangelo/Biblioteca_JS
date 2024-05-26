@@ -13,17 +13,23 @@ class Libro {
 
   // Metodo per ottenere il contenuto del libro come stringa
   toString() {
-    return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
+    return' Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}';
   }
 }
 
 class Libreria {
   constructor() {
     this.libri = [];
-    this.filePath = path.join(os.homedir(), 'books', 'libreria.txt');
-    this.caricaLibri();
     this.utenti = [];
     this.prestiti = [];
+    const dir = path.join(os.homedir(), 'books');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    this.filePath = path.join(dir, 'libreria.txt');
+    this.filePathUtenti = path.join(dir, 'utenti.txt');
+    this.caricaLibri();
+    this.caricaUtenti();
   }
 
   caricaLibri() {
@@ -37,19 +43,14 @@ class Libreria {
           this.libri.push(libro);
         });
       }
-    } else {
-      const dir = path.join(os.homedir(), 'books');
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
     }
   }
 
   salvaLibri() {
-    const lines = this.libri.map(libro => libro.toString());
+    const lines = this.libri.map('libro => ${libro.titolo}, ${libro.autore}, ${libro.genere}, ${libro.isbn}');
     const data = lines.join('\n');
     fs.writeFileSync(this.filePath, data, 'utf8');
-    console.log(`Libri salvati in ${this.filePath}`);
+    console.log('Libri salvati in ${this.filePath}');
   }
 
   aggiungiLibro() {
@@ -111,38 +112,39 @@ class Libreria {
     }
   }
 
+  salvaUtenti() {
+    const lines = this.utenti.map('utente => ${utente.id}, ${utente.nome}');
+    const data = lines.join('\n');
+    fs.writeFileSync(this.filePathUtenti, data, 'utf8');
+    console.log('Utenti salvati in ${this.filePathUtenti}');
+  }
+
+  caricaUtenti() {
+    if (fs.existsSync(this.filePathUtenti)) {
+      const data = fs.readFileSync(this.filePathUtenti, 'utf8').trim();
+      if (data !== '') {
+        const lines = data.split('\n');
+        lines.forEach(line => {
+          const [id, nome] = line.split(', ');
+          const utente = { id: parseInt(id), nome };
+          this.utenti.push(utente);
+        });
+      }
+    }
+  }
+
   aggiungiUtente(nome) {
     const id = this.utenti.length + 1;
     const nuovoUtente = { id, nome };
     this.utenti.push(nuovoUtente);
-    console.log(`Utente ${nome} aggiunto con ID ${id}.`);
+    this.salvaUtenti();
+    console.log('Utente ${nome} aggiunto con ID ${id}.');
   }
 
   visualizzaUtenti() {
     console.log("Elenco degli utenti:");
     this.utenti.forEach(utente => {
-      console.log(`ID: ${utente.id}, Nome: ${utente.nome}`);
-    });
-  }
-
-  effettuaPrestito(isbn, userId) {
-    const libro = this.libri.find(libro => libro.isbn === isbn);
-    const utente = this.utenti.find(utente => utente.id === userId);
-    if (!libro || !utente) {
-      console.log("Libro o utente non trovato.");
-      return;
-    }
-    const prestito = { isbn, userId, dataPrestito: new Date() };
-    this.prestiti.push(prestito);
-    console.log(`Prestito effettuato: Libro ISBN ${isbn} a Utente ${utente.nome}`);
-  }
-
-  visualizzaPrestiti() {
-    console.log("Elenco dei prestiti:");
-    this.prestiti.forEach(prestito => {
-      const libro = this.libri.find(libro => libro.isbn === prestito.isbn);
-      const utente = this.utenti.find(utente => utente.id === prestito.userId);
-      console.log(`Utente: ${utente.nome}, Libro: ${libro.titolo}, Data prestito: ${prestito.dataPrestito}`);
+      console.log('ID: ${utente.id}, Nome: ${utente.nome}');
     });
   }
 
@@ -157,8 +159,6 @@ class Libreria {
       console.log("4. Ricerca avanzata");
       console.log("5. Aggiungi utente");
       console.log("6. Visualizza utenti");
-      console.log("7. Effettua prestito");
-      console.log("8. Visualizza prestiti");
       console.log("0. Esci");
 
       scelta = prompt("Scelta: ");
@@ -182,14 +182,6 @@ class Libreria {
         case '6':
           this.visualizzaUtenti();
           break;
-        case '7':
-          const isbn = prompt('Inserisci l\'ISBN del libro: ');
-          const userId = prompt('Inserisci l\'ID dell\'utente: ');
-          this.effettuaPrestito(isbn, parseInt(userId));
-          break;
-        case '8':
-          this.visualizzaPrestiti();
-          break;
         case '0':
           console.log("Uscita dal programma.");
           break;
@@ -200,4 +192,5 @@ class Libreria {
   }
 }
 
-
+const miaLibreria = new Libreria();
+miaLibreria.menuAvanzato();
