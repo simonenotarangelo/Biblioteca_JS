@@ -13,7 +13,7 @@ class Libro {
 
   // Metodo per ottenere il contenuto del libro come stringa
   toString() {
-    return' Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}';
+    return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
   }
 }
 
@@ -22,13 +22,13 @@ class Libreria {
     this.libri = [];
     this.utenti = [];
     this.prestiti = [];
-    const dir = path.join(os.homedir(), 'books');
+    const dir = path.join(__dirname, 'books'); // Usando __dirname per ottenere il percorso della directory dello script
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
     this.filePath = path.join(dir, 'libreria.txt');
     this.filePathUtenti = path.join(dir, 'utenti.txt');
-    this.prestitiFilePath = path.join(os.homedir(), 'books', 'prestiti.txt');
+    this.prestitiFilePath = path.join(dir, 'prestiti.txt'); // Modifica anche questa variabile
     this.caricaLibri();
     this.caricaUtenti();
     this.caricaPrestiti();
@@ -54,10 +54,10 @@ class Libreria {
   }
 
   salvaLibri() {
-    const lines = this.libri.map('libro => ${libro.titolo}, ${libro.autore}, ${libro.genere}, ${libro.isbn}');
+    const lines = this.libri.map(libro => `${libro.titolo}, ${libro.autore}, ${libro.genere}, ${libro.isbn}`);
     const data = lines.join('\n');
     fs.writeFileSync(this.filePath, data, 'utf8');
-    console.log('Libri salvati in ${this.filePath}');
+    console.log(`Libri salvati in ${this.filePath}`);
 }
 
 
@@ -121,10 +121,10 @@ class Libreria {
   }
 
   salvaUtenti() {
-    const lines = this.utenti.map('utente => ${utente.id}, ${utente.nome}');
+    const lines = this.utenti.map(utente => `${utente.id}, ${utente.nome}`);
     const data = lines.join('\n');
     fs.writeFileSync(this.filePathUtenti, data, 'utf8');
-    console.log('Utenti salvati in ${this.filePathUtenti}');
+    console.log(`Utenti salvati in ${this.filePathUtenti}`);
   }
 
   caricaUtenti() {
@@ -146,13 +146,13 @@ class Libreria {
     const nuovoUtente = { id, nome };
     this.utenti.push(nuovoUtente);
     this.salvaUtenti();
-    console.log('Utente ${nome} aggiunto con ID ${id}.');
+    console.log(`Utente ${nome} aggiunto con ID ${id}.`);
   }
 
   visualizzaUtenti() {
     console.log("Elenco degli utenti:");
     this.utenti.forEach(utente => {
-      console.log('ID: ${utente.id}, Nome: ${utente.nome}');
+      console.log(`ID: ${utente.id}, Nome: ${utente.nome}`);
     });
   }
 
@@ -172,7 +172,7 @@ class Libreria {
     const prestito = { isbn, userId, dataPrestito: new Date() };
     this.prestiti.push(prestito);
     this.salvaPrestiti();
-    console.log('Prestito effettuato: Libro ISBN ${isbn} a Utente ${utente.nome}');
+    console.log(`Prestito effettuato: Libro ISBN ${isbn} a Utente ${utente.nome}`);
   }
 
   
@@ -196,7 +196,7 @@ class Libreria {
     this.prestiti.forEach(prestito => {
       const libro = this.libri.find(libro => libro.isbn === prestito.isbn);
       const utente = this.utenti.find(utente => utente.id === prestito.userId);
-      console.log('Utente: ${utente.nome}, Libro: ${libro.titolo}, Data prestito: ${prestito.dataPrestito}');
+      console.log(`Utente: ${utente.nome}, Libro: ${libro.titolo}, Data prestito: ${prestito.dataPrestito}`);
     });
   }
 
@@ -213,10 +213,10 @@ class Libreria {
 }
 
 salvaPrestiti() {
-    const lines = this.prestiti.map('prestito => ${prestito.userId}, ${prestito.isbn}, ${prestito.dataPrestito}');
+    const lines = this.prestiti.map(prestito => `${prestito.userId}, ${prestito.isbn}, ${prestito.dataPrestito}`);
     const data = lines.join('\n');
     fs.writeFileSync(this.prestitiFilePath, data, 'utf8');
-    console.log('Prestiti salvati in ${this.prestitiFilePath}');
+    console.log(`Prestiti salvati in ${this.prestitiFilePath}`);
 }
 
 
