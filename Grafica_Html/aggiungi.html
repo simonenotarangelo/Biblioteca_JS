@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Libro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Aggiungi Libro</h1>
+        <form id="aggiungiLibroForm">
+            <label for="titolo">Titolo:</label>
+            <input type="text" id="titolo" required>
+            <label for="autore">Autore:</label>
+            <input type="text" id="autore" required>
+            <label for="genere">Genere:</label>
+            <input type="text" id="genere" required>
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" required>
+            <button type="submit">Aggiungi</button>
+        </form>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('aggiungiLibroForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const titolo = document.getElementById('titolo').value;
+            const autore = document.getElementById('autore').value;
+            const genere = document.getElementById('genere').value;
+            const isbn = document.getElementById('isbn').value;
+            miaLibreria.aggiungiLibro(titolo, autore, genere, isbn);
+        });
+    </script>
+</body>
+</html>
