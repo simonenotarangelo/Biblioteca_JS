@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restituisci Libro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Restituisci Libro</h1>
+        <form id="restituisciLibroForm">
+            <label for="isbn">ISBN del Libro:</label>
+            <input type="text" id="isbn" required>
+            <button type="submit">Restituisci</button>
+        </form>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('restituisciLibroForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const isbn = document.getElementById('isbn').value;
+            miaLibreria.restituzioneLibro(isbn);
+        });
+    </script>
+</body>
+</html>

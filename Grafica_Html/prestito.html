@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effettua Prestito</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Effettua Prestito</h1>
+        <form id="effettuaPrestitoForm">
+            <label for="isbn">ISBN del Libro:</label>
+            <input type="text" id="isbn" required>
+            <label for="userId">ID Utente:</label>
+            <input type="text" id="userId" required>
+            <button type="submit">Effettua</button>
+        </form>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('effettuaPrestitoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const isbn = document.getElementById('isbn').value;
+            const userId = document.getElementById('userId').value;
+            miaLibreria.effettuaPrestito(isbn, userId);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuovo Utente</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nuovo Utente</h1>
+        <form id="nuovoUtenteForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required>
+            <button type="submit">Aggiungi</button>
+        </form>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('nuovoUtenteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+            miaLibreria.aggiungiUtente(nome);
+        });
+    </script>
+</body>
+</html>
