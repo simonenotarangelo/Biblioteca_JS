@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizza Utenti</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Visualizza Utenti</h1>
+        <div id="utentiList"></div>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const utentiList = document.getElementById('utentiList');
+            const utenti = miaLibreria.visualizzaUtenti();
+            utenti.forEach(utente => {
+                const p = document.createElement('p');
+                p.textContent = `ID: ${utente.id}, Nome: ${utente.nome}`;
+                utentiList.appendChild(p);
+            });
+        });
+    </script>
+</body>
+</html>
