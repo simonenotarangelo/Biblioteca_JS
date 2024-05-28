@@ -11,7 +11,6 @@ class Libro {
     this.isbn = isbn;
   }
 
-  // Metodo per ottenere il contenuto del libro come stringa
   toString() {
     return `Titolo: ${this.titolo}, Autore: ${this.autore}, Genere: ${this.genere}, ISBN: ${this.isbn}`;
   }
@@ -22,13 +21,15 @@ class Libreria {
     this.libri = [];
     this.utenti = [];
     this.prestiti = [];
-    const dir = path.join(__dirname, 'books'); // Usando __dirname per ottenere il percorso della directory dello script
+    
+    const dir = path.join(__dirname, 'books');
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
     this.filePath = path.join(dir, 'libreria.txt');
+    this.filePathLibreria = path.join(dir, 'grafica.txt');
     this.filePathUtenti = path.join(dir, 'utenti.txt');
-    this.prestitiFilePath = path.join(dir, 'prestiti.txt'); // Modifica anche questa variabile
+    this.prestitiFilePath = path.join(dir, 'prestiti.txt');
     this.caricaLibri();
     this.caricaUtenti();
     this.caricaPrestiti();
@@ -58,8 +59,7 @@ class Libreria {
     const data = lines.join('\n');
     fs.writeFileSync(this.filePath, data, 'utf8');
     console.log(`Libri salvati in ${this.filePath}`);
-}
-
+  }
 
   aggiungiLibro() {
     const titolo = prompt('Inserisci il titolo del libro: ');
@@ -79,6 +79,7 @@ class Libreria {
   }
 
   visualizzaLibri() {
+    console.log("Elenco dei libri:");
     this.libri.forEach(libro => {
       console.log(libro.toString());
     });
@@ -141,6 +142,10 @@ class Libreria {
     }
   }
 
+  numeroLibri() {
+    return this.libri.length;
+  }
+
   aggiungiUtente(nome) {
     const id = this.utenti.length + 1;
     const nuovoUtente = { id, nome };
@@ -175,11 +180,9 @@ class Libreria {
     console.log(`Prestito effettuato: Libro ISBN ${isbn} a Utente ${utente.nome}`);
   }
 
-  
-
   caricaPrestiti() {
-    if (fs.existsSync(this.filePathPrestiti)) {
-      const data = fs.readFileSync(this.filePathPrestiti, 'utf8').trim();
+    if (fs.existsSync(this.prestitiFilePath)) {
+      const data = fs.readFileSync(this.prestitiFilePath, 'utf8').trim();
       if (data !== '') {
         const lines = data.split('\n');
         lines.forEach(line => {
@@ -200,30 +203,59 @@ class Libreria {
     });
   }
 
-
   restituisciLibro(userId, isbn) {
     const prestitoIndex = this.prestiti.findIndex(prestito => prestito.userId === userId && prestito.isbn === isbn);
     if (prestitoIndex === -1) {
-        console.log("Prestito non trovato.");
-        return;
+      console.log("Prestito non trovato.");
+      return;
     }
     this.prestiti.splice(prestitoIndex, 1);
     this.salvaPrestiti();
     console.log("Libro restituito con successo.");
-}
+  }
 
-salvaPrestiti() {
+  salvaPrestiti() {
     const lines = this.prestiti.map(prestito => `${prestito.userId}, ${prestito.isbn}, ${prestito.dataPrestito}`);
     const data = lines.join('\n');
     fs.writeFileSync(this.prestitiFilePath, data, 'utf8');
     console.log(`Prestiti salvati in ${this.prestitiFilePath}`);
-}
+  }
+
+  stampaRighe(numeroSezione) {
+    const data = fs.readFileSync(this.filePathLibreria, 'utf8').trim();
+    const lines = data.split('\n');
+    const start = (numeroSezione - 1) * 23;
+    const end = start + 23;
+    const section = lines.slice(start, end);
+    section.forEach(line => console.log(line));
+  }
 
 
-  // Funzione per gestire il menu avanzato
+
+  eliminaLibro(isbn) {
+    const indiceLibro = this.libri.findIndex(libro => libro.isbn === isbn);
+    if (indiceLibro !== -1) {
+      this.libri.splice(indiceLibro, 1);
+      this.salvaLibri();
+      console.log("Libro eliminato con successo.");
+    } else {
+      console.log("Il libro non è presente nella libreria.");
+    }
+  }
+  
+  pulisciSchermo() {
+    console.clear();
+    this.stampaRighe(this.numeroLibri());
+  }
+
+ 
+  
+
   menuAvanzato() {
     let scelta;
     do {
+      console.clear();
+      this.stampaRighe(this.numeroLibri());
       console.log("\nMenu Avanzato:");
       console.log("1. Aggiungi libro");
       console.log("2. Visualizza libri");
@@ -234,43 +266,60 @@ salvaPrestiti() {
       console.log("7. Effettua prestito");
       console.log("8. Visualizza prestiti");
       console.log("9. Effettua una restituzione");
+      console.log("10. Elimina un libro");
       console.log("0. Esci");
-
+  
       scelta = prompt("Scelta: ");
       switch (scelta) {
         case '1':
           this.aggiungiLibro();
+          prompt("Premi INVIO per continuare...");
           break;
         case '2':
           this.visualizzaLibri();
+          prompt("Premi INVIO per continuare...");
           break;
         case '3':
           this.aggiornaLibro();
+          prompt("Premi INVIO per continuare...");
           break;
         case '4':
           this.ricercaAvanzata();
+          prompt("Premi INVIO per continuare...");
           break;
         case '5':
           const nomeUtente = prompt('Inserisci il nome dell\'utente: ');
           this.aggiungiUtente(nomeUtente);
+          prompt("Premi INVIO per continuare...");
           break;
         case '6':
           this.visualizzaUtenti();
+          prompt("Premi INVIO per continuare...");
           break;
         case '7':
           const isbn = prompt('Inserisci l\'ISBN del libro: ');
           const userId = prompt('Inserisci l\'ID dell\'utente: ');
           this.effettuaPrestito(isbn, parseInt(userId));
+          prompt("Premi INVIO per continuare...");
           break;
         case '8':
           this.visualizzaPrestiti();
+          prompt("Premi INVIO per continuare...");
           break;
         case '9':
           const userIdRestituzione = prompt('Inserisci l\'ID dell\'utente che restituisce il libro: ');
           const isbnRestituzione = prompt('Inserisci l\'ISBN del libro da restituire: ');
           this.restituisciLibro(parseInt(userIdRestituzione), isbnRestituzione);
+          prompt("Premi INVIO per continuare...");
           break;
-          
+      
+        case '10':
+          const isbnDaEliminare = prompt('Inserisci l\'ISBN del libro da eliminare: ');
+          this.eliminaLibro(isbnDaEliminare);
+          prompt("Premi INVIO per continuare...");
+
+          break;
+
         case '0':
           console.log("Uscita dal programma.");
           break;
@@ -278,7 +327,7 @@ salvaPrestiti() {
           console.log("Scelta non valida. Riprova.");
       }
     } while (scelta !== '0');
-  }
-}
+  }}
 const miaLibreria = new Libreria();
+miaLibreria.stampaRighe(miaLibreria.numeroLibri());
 miaLibreria.menuAvanzato();
