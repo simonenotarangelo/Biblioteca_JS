@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricerca Libro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ricerca Libro</h1>
+        <form id="ricercaLibroForm">
+            <label for="ricerca">Ricerca:</label>
+            <input type="text" id="ricerca" required>
+            <button type="submit">Cerca</button>
+        </form>
+        <div id="risultatiRicerca"></div>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('ricercaLibroForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const ricerca = document.getElementById('ricerca').value;
+            const risultati = miaLibreria.ricercaAvanzata(ricerca);
+            const risultatiRicerca = document.getElementById('risultatiRicerca');
+            risultatiRicerca.innerHTML = '';
+            risultati.forEach(libro => {
+                const p = document.createElement('p');
+                p.textContent = `Titolo: ${libro.titolo}, Autore: ${libro.autore}, Genere: ${libro.genere}, ISBN: ${libro.isbn}`;
+                risultatiRicerca.appendChild(p);
+            });
+        });
+    </script>
+</body>
+</html>

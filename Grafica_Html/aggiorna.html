@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiorna Libro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Aggiorna Libro</h1>
+        <form id="aggiornaLibroForm">
+            <label for="isbn">ISBN del Libro:</label>
+            <input type="text" id="isbn" required>
+            <label for="nuovoTitolo">Nuovo Titolo:</label>
+            <input type="text" id="nuovoTitolo" required>
+            <label for="nuovoAutore">Nuovo Autore:</label>
+            <input type="text" id="nuovoAutore" required>
+            <label for="nuovoGenere">Nuovo Genere:</label>
+            <input type="text" id="nuovoGenere" required>
+            <button type="submit">Aggiorna</button>
+        </form>
+    </div>
+    <script src="Versione_Avanzata.js"></script>
+    <script>
+        document.getElementById('aggiornaLibroForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const isbn = document.getElementById('isbn').value;
+            const nuovoTitolo = document.getElementById('nuovoTitolo').value;
+            const nuovoAutore = document.getElementById('nuovoAutore').value;
+            const nuovoGenere = document.getElementById('nuovoGenere').value;
+            miaLibreria.aggiornaLibro(isbn, nuovoTitolo, nuovoAutore, nuovoGenere);
+        });
+    </script>
+</body>
+</html>
