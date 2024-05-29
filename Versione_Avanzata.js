@@ -22,12 +22,12 @@ class Libreria {
     this.utenti = [];
     this.prestiti = [];
     
-    const dir = path.join(__dirname, 'books');
+    const dir = path.join(__dirname, 'info');
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
     this.filePath = path.join(dir, 'libreria.txt');
-    this.filePathLibreria = path.join(dir, 'grafica.txt');
+    this.filePathLibreria = path.join('grafica.txt');
     this.filePathUtenti = path.join(dir, 'utenti.txt');
     this.prestitiFilePath = path.join(dir, 'prestiti.txt');
     this.caricaLibri();
@@ -47,7 +47,7 @@ class Libreria {
         });
       }
     } else {
-      const dir = path.join(os.homedir(), 'books');
+      const dir = path.join(__dirname, 'info');
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
@@ -224,7 +224,7 @@ class Libreria {
   stampaRighe(numeroSezione) {
     const data = fs.readFileSync(this.filePathLibreria, 'utf8').trim();
     const lines = data.split('\n');
-    const start = (numeroSezione - 1) * 23;
+    let start = (numeroSezione) * 23;
     const end = start + 23;
     const section = lines.slice(start, end);
     section.forEach(line => console.log(line));
